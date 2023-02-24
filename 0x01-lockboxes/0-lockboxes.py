@@ -2,7 +2,7 @@
 """Lockboxes"""
 
 
-def canUnlockAll(boxes): #pylint: disable=invalid-name
+def canUnlockAll(boxes):  #pylint: disable=invalid-name
     """
     Checks if all boxes can be opened or not.
 
@@ -12,7 +12,7 @@ def canUnlockAll(boxes): #pylint: disable=invalid-name
     Returns: True if all boxes can be opened, False otherwise
     """
     # Number of boxes
-    n = len(boxes) #pylint: disable=invalid-name
+    n = len(boxes)  #pylint: disable=invalid-name
 
     if n <= 0:
         return False
