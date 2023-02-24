@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Lockboxes"""
 
+
 def canUnlockAll(boxes): #pylint: disable=invalid-name
     """
     Checks if all boxes can be opened or not.
