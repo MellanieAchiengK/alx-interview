@@ -1,7 +1,8 @@
-#!/usr/bin/python3  #pylint: disable=invalid-name
+#!/usr/bin/python3 # pylint: disable=invalid-name
 """Making Change Module"""
 
-def makeChange(coins, total): #pylint: disable=invalid-name
+
+def makeChange(coins, total):  # pylint: disable=invalid-name
     """determine the fewest number of coins needed 
     to meet a given amount total"""
     if total <= 0:
