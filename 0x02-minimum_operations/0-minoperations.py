@@ -5,13 +5,27 @@ in exactly n H characters in a text file
 """
 
 
-def minOperations(n):  # pylint: disable=invalid-name
-    """minimum operations"""
-    dp = [0] * (n+1)  # pylint: disable=invalid-name
-    dp[1] = 0
-    for i in range(2, n+1):
-        dp[i] = i
-        for j in range(2, i):
-            if i % j == 0:
-                dp[i] = min(dp[i], dp[j] + i//j)
-    return dp[n] if n > 1 else 0
+def minOperations(n):
+    """minmum operations"""
+    if n < 1:
+        return 0
+
+    operations = 0
+    divisor = 2
+
+    while n > 1:
+        if n % divisor == 0:
+            n //= divisor
+            operations += divisor
+        else:
+            divisor += 1
+
+    return operations
+
+if __name__ == "__main__":
+    n = 4
+    print("Min number of operations to reach {} char: {}".format(n, minOperations(n)))
+
+    n = 12
+    print("Min number of operations to reach {} char: {}".format(n, minOperations(n)))
+
