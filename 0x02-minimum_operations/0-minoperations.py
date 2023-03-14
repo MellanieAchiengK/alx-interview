@@ -7,7 +7,7 @@ in exactly n H characters in a text file
 
 def minOperations(n):  # pylint: disable=invalid-name
     """minimum operations"""
-    dp = [0] * (n+1)
+    dp = [0] * (n+1)  # pylint: disable=invalid-name
     dp[1] = 0
     for i in range(2, n+1):
         dp[i] = i
