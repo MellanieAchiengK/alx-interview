@@ -1,47 +1,42 @@
 #!/usr/bin/python3
 """log parsing"""
+
 import sys
+import signal
+from collections import defaultdict
 
+# Define signal handler function for CTRL+C
+def signal_handler(signal, frame):
+    print_metrics()
+    sys.exit(0)
 
-total_size = 0  # pylint: disable=invalid-name
-status_codes = {
-    "200": 0,
-    "301": 0,
-    "400": 0,
-    "401": 0,
-    "403": 0,
-    "404": 0,
-    "405": 0,
-    "500": 0
-}
+# Register the signal handler for CTRL+C
+signal.signal(signal.SIGINT, signal_handler)
 
-try:
-    line_count = 0  # pylint: disable=invalid-name
-    for line in sys.stdin:
-        line_count += 1
+# Define variables for metrics
+total_file_size = 0
+status_code_count = defaultdict(int)
 
-        # Parse input and calculate total size
-        parts = line.split(' ')
-        if len(parts) != 6:
-            continue
+# Define function to print metrics
+def print_metrics():
+    print("Total file size: {}".format(total_file_size))
+    for status_code in sorted(status_code_count.keys()):
+        print("{}: {}".format(status_code, status_code_count[status_code]))
 
-        status_code = int(parts[5])
-        file_size = int(parts[6][:-1])
-        total_size += file_size
+# Read lines from stdin
+for i, line in enumerate(sys.stdin):
+    # Parse the line
+    try:
+        parts = line.split()
+        file_size = int(parts[8])
+        status_code = int(parts[7])
+    except:
+        continue
 
-        # Calculate the number of lines by status code
-        if status_code in status_codes:
-            status_codes[str(status_code)] += 1
+    # Update metrics
+    total_file_size += file_size
+    status_code_count[status_code] += 1
 
-        # Output metrics
-        if line_count % 10 == 0:
-            print("Total file size:", total_size)
-            print("Number of lines by status code:")
-            for k in sorted(status_codes.keys()):
-                print(f"{k}: {status_codes[k]}")
-
-except KeyboardInterrupt:
-    print("Total file size:", total_size)
-    print("Number of lines by status code:")
-    for k in sorted(status_codes.keys()):
-        print(f"{k}: {status_codes[k]}")
+    # Print metrics every 10 lines
+    if i > 0 and i % 10 == 0:
+        print_metrics()
