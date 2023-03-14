@@ -7,15 +7,11 @@ in exactly n H characters in a text file
 
 def minOperations(n):  # pylint: disable=invalid-name
     """minimum operations"""
-    if n < 0:
-        return 0
-    operations = 0
-    while n > 1:
-        if n % 2 == 0:
-            n //= 2
-        else:
-            n -= 1
-        operations += 1
-
-    operations += n
-    return operations
+    dp = [0] * (n+1)
+    dp[1] = 0
+    for i in range(2, n+1):
+        dp[i] = i
+        for j in range(2, i):
+            if i % j == 0:
+                dp[i] = min(dp[i], dp[j] + i//j)
+    return dp[n] if n > 1 else 0
