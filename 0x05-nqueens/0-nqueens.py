@@ -6,7 +6,8 @@ def print_solutions(queens, n):
     """
     Print all solutions to N Queens problem
 
-    :param queens: a list of size N that stores the position of queens in the current solution
+    :param queens: a list of size N that stores the position of queens 
+    in the current solution
     :param n: the number of rows and columns on the chessboard
     """
 
@@ -26,7 +27,8 @@ def print_solutions(queens, n):
                 valid = False
                 break
 
-        # If the current position is valid, add it to the list and continue to the next column
+        # If the current position is valid, add it to the list 
+        # and continue to the next column
         if valid:
             queens.append(i)
             print_solutions(queens, n)

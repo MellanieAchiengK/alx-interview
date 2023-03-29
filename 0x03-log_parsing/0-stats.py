@@ -1,42 +1,41 @@
 #!/usr/bin/python3
-"""log parsing"""
-
+"""Log Parser"""
 import sys
-import signal
-from collections import defaultdict
 
-# Define signal handler function for CTRL+C
-def signal_handler(signal, frame):
-    print_metrics()
-    sys.exit(0)
 
-# Register the signal handler for CTRL+C
-signal.signal(signal.SIGINT, signal_handler)
+if __name__ == '__main__':
+    file_size = [0]
+    status_codes = {200: 0, 301: 0, 400: 0, 401: 0,
+                    403: 0, 404: 0, 405: 0, 500: 0}
 
-# Define variables for metrics
-total_file_size = 0
-status_code_count = defaultdict(int)
+    def print_stats():
+        """ Print statistics """
+        print('File size: {}'.format(file_size[0]))
+        for key in sorted(status_codes.keys()):
+            if status_codes[key]:
+                print('{}: {}'.format(key, status_codes[key]))
 
-# Define function to print metrics
-def print_metrics():
-    print("Total file size: {}".format(total_file_size))
-    for status_code in sorted(status_code_count.keys()):
-        print("{}: {}".format(status_code, status_code_count[status_code]))
+    def parse_line(line):
+        """ Checks the line for matches """
+        try:
+            line = line[:-1]
+            word = line.split(' ')
+            file_size[0] += int(word[-1])
+            status_code = int(word[-2])
+            if status_code in status_codes:
+                status_codes[status_code] += 1
+        except BaseException:
+            pass
 
-# Read lines from stdin
-for i, line in enumerate(sys.stdin):
-    # Parse the line
+    linenum = 1
     try:
-        parts = line.split()
-        file_size = int(parts[8])
-        status_code = int(parts[7])
-    except:
-        continue
-
-    # Update metrics
-    total_file_size += file_size
-    status_code_count[status_code] += 1
-
-    # Print metrics every 10 lines
-    if i > 0 and i % 10 == 0:
-        print_metrics()
+        for line in sys.stdin:
+            parse_line(line)
+            """ print after every 10 lines """
+            if linenum % 10 == 0:
+                print_stats()
+            linenum += 1
+    except KeyboardInterrupt:
+        print_stats()
+        raise
+    print_stats()
