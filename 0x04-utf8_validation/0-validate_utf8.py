@@ -6,10 +6,12 @@ def validUTF8(data):
     """data"""
     # Number of bytes in the current UTF-8 character
     num_bytes = 0
+    mask = 255
 
     for byte in data:
         # Check if this is the start of a new UTF-8 character
         if num_bytes == 0:
+            byte = byte & mask
             # Count the number of bytes in this UTF-8 character
             if byte >> 5 == 0b110:
                 num_bytes = 1
@@ -17,7 +19,7 @@ def validUTF8(data):
                 num_bytes = 2
             elif byte >> 3 == 0b11110:
                 num_bytes = 3
-            elif byte >> 7 != 0:
+            elif byte >> 7:
                 # This is an invalid start byte
                 return False
         else:
